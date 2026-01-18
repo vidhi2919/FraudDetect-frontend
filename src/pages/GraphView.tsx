@@ -1592,7 +1592,7 @@ type SubgraphResponse = {
 /* ✅ FIX 1: NO trailing slash */
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
-  "https://753078c67d81.ngrok-free.app";
+  "https://15.206.90.105";
 
 /* ✅ FIX 2: Centralized fetch with ngrok header */
 async function apiFetch<T>(url: string): Promise<T> {
