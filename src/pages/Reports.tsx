@@ -1499,8 +1499,8 @@ import { apiGet } from "@/lib/api";
 // const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 const API_BASE =
   typeof window !== "undefined"
-    ? (window as any).__API_BASE__ ?? "http://15.206.90.105"
-    : "http://15.206.90.105";
+    ? (window as any).__API_BASE__ ?? "https://753078c67d81.ngrok-free.app/"
+    : "https://753078c67d81.ngrok-free.app/";
 
 
 type RiskBand = "HIGH" | "MEDIUM" | "LOW";
