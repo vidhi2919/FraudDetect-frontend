@@ -1480,28 +1480,143 @@
 
 ///////////////////////////////////////////////////////
 
+
+// "use client";
+
+// import { useEffect, useMemo, useState } from "react";
+// import {
+//   FileText,
+//   Download,
+//   Calendar,
+//   Filter,
+//   Eye,
+//   Share,
+//   Clock,
+//   AlertTriangle,
+// } from "lucide-react";
+// import { RiskBadge } from "@/components/dashboard/RiskBadge";
+// import { apiGet } from "@/lib/api";
+
+// // const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+// const API_BASE =
+//   typeof window !== "undefined"
+//     ? (window as any).__API_BASE__ ?? "https://753078c67d81.ngrok-free.app/"
+//     : "https://753078c67d81.ngrok-free.app/";
+
+
+// type RiskBand = "HIGH" | "MEDIUM" | "LOW";
+// type RiskLevelUI = "high" | "medium" | "low";
+
+// type RagItem = {
+//   account_id?: string;
+//   risk?: { risk_band?: RiskBand };
+//   report?: string;
+// };
+
+// type RagResponse = { items: RagItem[] };
+
+// type ReportUI = {
+//   id: string;
+//   title: string;
+//   accounts: string[];
+//   riskLevel: RiskLevelUI;
+// };
+
+// function toRiskLevelUI(b?: RiskBand): RiskLevelUI {
+//   if (b === "HIGH") return "high";
+//   if (b === "MEDIUM") return "medium";
+//   return "low";
+// }
+
+// export default function Reports() {
+//   const [items, setItems] = useState<RagItem[]>([]);
+//   const [err, setErr] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     apiGet<RagResponse>("/rag")
+//       .then((r) => setItems(r.items))
+//       .catch(() => setErr("Failed to load reports"));
+//   }, []);
+
+//   const reports: ReportUI[] = useMemo(
+//     () =>
+//       items
+//         .filter((i) => i.account_id)
+//         .map((i) => ({
+//           id: `RPT-${i.account_id}`,
+//           title: `Investigation Report – ${i.account_id}`,
+//           accounts: [i.account_id!],
+//           riskLevel: toRiskLevelUI(i.risk?.risk_band),
+//         })),
+//     [items]
+//   );
+
+//   function openPdf(acc: string) {
+//     window.open(`${API_BASE}/reports/${acc}/pdf`, "_blank");
+//   }
+
+//   return (
+//     <div className="min-h-screen p-6 space-y-6">
+//       <h1 className="text-2xl font-bold flex items-center gap-2">
+//         <FileText className="w-6 h-6 text-primary" />
+//         Investigation Reports
+//       </h1>
+
+//       {err && (
+//         <p className="text-risk-high flex items-center gap-2">
+//           <AlertTriangle className="w-4 h-4" /> {err}
+//         </p>
+//       )}
+
+//       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+//         {reports.map((r) => (
+//           <div
+//             key={r.id}
+//             className="bg-card border rounded-lg p-5 cursor-pointer hover:border-primary"
+//             onClick={() => openPdf(r.accounts[0])}
+//           >
+//             <div className="flex justify-between mb-2">
+//               <span className="font-mono text-xs">{r.id}</span>
+//               <RiskBadge level={r.riskLevel} size="sm" />
+//             </div>
+
+//             <h3 className="font-medium mb-3">{r.title}</h3>
+
+//             <div className="flex justify-end gap-2">
+//               <button onClick={(e) => { e.stopPropagation(); openPdf(r.accounts[0]); }}>
+//                 <Eye className="w-4 h-4" />
+//               </button>
+//               <button onClick={(e) => { e.stopPropagation(); openPdf(r.accounts[0]); }}>
+//                 <Download className="w-4 h-4" />
+//               </button>
+//               <button onClick={(e) => e.stopPropagation()}>
+//                 <Share className="w-4 h-4" />
+//               </button>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
 import {
   FileText,
   Download,
-  Calendar,
-  Filter,
   Eye,
   Share,
-  Clock,
   AlertTriangle,
 } from "lucide-react";
 import { RiskBadge } from "@/components/dashboard/RiskBadge";
 import { apiGet } from "@/lib/api";
 
-// const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+/* ✅ FIX: NO trailing slash */
 const API_BASE =
-  typeof window !== "undefined"
-    ? (window as any).__API_BASE__ ?? "https://753078c67d81.ngrok-free.app/"
-    : "https://753078c67d81.ngrok-free.app/";
-
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "https://753078c67d81.ngrok-free.app";
 
 type RiskBand = "HIGH" | "MEDIUM" | "LOW";
 type RiskLevelUI = "high" | "medium" | "low";
@@ -1512,7 +1627,9 @@ type RagItem = {
   report?: string;
 };
 
-type RagResponse = { items: RagItem[] };
+type RagResponse = {
+  items: RagItem[];
+};
 
 type ReportUI = {
   id: string;
@@ -1531,6 +1648,7 @@ export default function Reports() {
   const [items, setItems] = useState<RagItem[]>([]);
   const [err, setErr] = useState<string | null>(null);
 
+  /* ✅ API call via apiGet (ngrok-safe) */
   useEffect(() => {
     apiGet<RagResponse>("/rag")
       .then((r) => setItems(r.items))
@@ -1550,8 +1668,12 @@ export default function Reports() {
     [items]
   );
 
-  function openPdf(acc: string) {
-    window.open(`${API_BASE}/reports/${acc}/pdf`, "_blank");
+  /* ✅ Correct PDF open (no double slash) */
+  function openPdf(accountId: string) {
+    window.open(
+      `${API_BASE}/reports/${encodeURIComponent(accountId)}/pdf`,
+      "_blank"
+    );
   }
 
   return (
@@ -1563,7 +1685,8 @@ export default function Reports() {
 
       {err && (
         <p className="text-risk-high flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4" /> {err}
+          <AlertTriangle className="w-4 h-4" />
+          {err}
         </p>
       )}
 
@@ -1581,13 +1704,25 @@ export default function Reports() {
 
             <h3 className="font-medium mb-3">{r.title}</h3>
 
-            <div className="flex justify-end gap-2">
-              <button onClick={(e) => { e.stopPropagation(); openPdf(r.accounts[0]); }}>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openPdf(r.accounts[0]);
+                }}
+              >
                 <Eye className="w-4 h-4" />
               </button>
-              <button onClick={(e) => { e.stopPropagation(); openPdf(r.accounts[0]); }}>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openPdf(r.accounts[0]);
+                }}
+              >
                 <Download className="w-4 h-4" />
               </button>
+
               <button onClick={(e) => e.stopPropagation()}>
                 <Share className="w-4 h-4" />
               </button>
