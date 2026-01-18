@@ -28,7 +28,7 @@
 
 // src/lib/api.ts
 
-const API_BASE = "http://15.206.90.105"; // AWS backend IP (production)
+const API_BASE = "https://753078c67d81.ngrok-free.app/"; // AWS backend IP (production)
 
 export async function apiGet<T>(
   path: string,
