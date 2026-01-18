@@ -28,7 +28,31 @@
 
 // src/lib/api.ts
 
-const API_BASE = "https://753078c67d81.ngrok-free.app/"; // AWS backend IP (production)
+// const API_BASE = "https://753078c67d81.ngrok-free.app/"; // AWS backend IP (production)
+
+// export async function apiGet<T>(
+//   path: string,
+//   init?: RequestInit
+// ): Promise<T> {
+//   const res = await fetch(`${API_BASE}${path}`, {
+//     ...init,
+//     headers: {
+//       "Content-Type": "application/json",
+//       ...(init?.headers ?? {}),
+//     },
+//     cache: "no-store",
+//   });
+
+//   if (!res.ok) {
+//     const text = await res.text().catch(() => "");
+//     throw new Error(`GET ${path} failed: ${res.status} ${text}`);
+//   }
+
+//   return (await res.json()) as T;
+// }
+// src/lib/api.ts
+
+const API_BASE = "https://753078c67d81.ngrok-free.app"; // no trailing slash
 
 export async function apiGet<T>(
   path: string,
@@ -38,6 +62,7 @@ export async function apiGet<T>(
     ...init,
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true", // 🔥 IMPORTANT
       ...(init?.headers ?? {}),
     },
     cache: "no-store",
