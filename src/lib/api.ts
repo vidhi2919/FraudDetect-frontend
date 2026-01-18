@@ -53,7 +53,7 @@
 // src/lib/api.ts
 
 // const API_BASE = "https://753078c67d81.ngrok-free.app"; // no trailing slash
-const API_BASE = "https://15.206.90.105/";
+const API_BASE = "https://15.206.90.105";
 
 
 export async function apiGet<T>(
