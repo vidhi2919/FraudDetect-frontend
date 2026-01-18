@@ -1616,7 +1616,7 @@ import { apiGet } from "@/lib/api";
 /* ✅ FIX: NO trailing slash */
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "https://15.206.90.105/";
+  "https://15.206.90.105";
 
 type RiskBand = "HIGH" | "MEDIUM" | "LOW";
 type RiskLevelUI = "high" | "medium" | "low";
