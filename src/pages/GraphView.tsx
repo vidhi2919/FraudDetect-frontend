@@ -1396,7 +1396,7 @@ type SubgraphResponse = {
   edges: GraphEdge[];
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://15.206.90.105";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://753078c67d81.ngrok-free.app/";
 
 function riskFromScore(score0to1: number): RiskLevel {
   if (score0to1 >= 0.7) return "high";
